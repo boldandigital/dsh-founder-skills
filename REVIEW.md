@@ -4,6 +4,23 @@ Reviewed 2026-11-21, against DSH 0.2.2-rc.5 and the upstream MIT pack at
 `Jakeschincariol/founder-skill`. This is the honest state of the port: what was
 broken, what was fixed, what was added, and what is still not right.
 
+## Published
+
+Released 2026-11-21 as `dsh-founder-skills@1.0.0`.
+
+| channel | address |
+| --- | --- |
+| npm | https://www.npmjs.com/package/dsh-founder-skills (tagged `latest`, 27 files, 42.6 kB) |
+| GitHub | https://github.com/boldandigital/dsh-founder-skills (public, `main`) |
+
+Both verified by downloading the published tarball and installing it into a
+clean DSH home: 12 skills installed, `run.py new` worked in both Quick and
+Full mode, and the panel dealt 100 buyers in Full. GitHub CI is green on the
+published commit.
+
+Install with `npm install -g dsh-founder-skills` and then `./install.sh` from
+the installed directory, or clone the repo and run `./install.sh` directly.
+
 ## Verdict
 
 **Shippable.** The pack runs end to end in DSH, the verdict is computed from
@@ -112,14 +129,12 @@ finding — no conclusion about that idea should be drawn from it.
 
 ## Before publishing publicly
 
-1. Fix issue 7 in the upstream repo — replace `run /founder-cfo` with something
-   that reads as a skill name, and update the two test assertions that pin the
-   current string.
-2. Decide the package name and scope (`@lars/founder-dsh` is a placeholder).
-3. Add a CI job that runs the upstream test suite against `skills/`, so a
-   future upstream merge cannot silently break the port.
-4. Write the release note: what changed from upstream, what is new, and the
-   MIT attribution with a link.
+Done, except the two items that need an upstream decision:
+
+1. Issue 7 is open by choice — replacing `run /founder-cfo` means changing two
+   upstream test assertions, which belongs in the upstream repo.
+2. The package name is now `dsh-founder-skills` (unscoped, matching the sibling
+   DSH packages), CI is in place, and `CHANGELOG.md` documents the release.
 
 ## Upstream
 
