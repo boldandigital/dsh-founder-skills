@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.0.1 — 2026-11-21
+
+Hardened the panel's operational mechanics after running both modes for real.
+
+### Changed
+
+- **`workflow.md` states the harness's eight-active-child cap** and tells the
+  agent to launch six to eight buyers per batch. The previous guidance said
+  "waves of ten", which fails with `subagent limit reached (active child
+  limit: 8)`.
+- **`workflow.md` documents the loop that works**: `check` → launch → `wait_agent`
+  → `check`, plus the two failure modes seen in practice — a child that reports
+  success without writing its answer file, and a child that omits the four
+  price fields.
+- **`founder/SKILL.md`** repeats the eight-child cap in its own instructions.
+- **`run.py` gains `check-customer`**, which validates a customer profile
+  against `panel.py`'s own rules and exits non-zero before the panel is set up,
+  instead of failing half-way through a run.
+- **`README.md`** documents the wave count and wall time for each mode.
+
+### Verified
+
+Full mode deals 100 buyers into 10 waves and generates 100 briefs; three real
+sub-agents produced complete, valid answers with all four price fields in the
+run's currency; the upstream test suite still passes.
+
 ## 1.0.0 — 2026-11-21
 
 First release of the Founder pack for DeepSeek Harness.
