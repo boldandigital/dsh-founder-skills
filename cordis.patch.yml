@@ -1,0 +1,19 @@
+# Patch layer for the bundle route.
+#
+# The pack ships plain skill directories, which DSH's skill-filesystem provider
+# discovers automatically from <dshHome>/skills. Nothing here is required for
+# that path.
+#
+# This file exists for the bundle route, where the skills are carried inside the
+# package and mounted at rank 600 through `bundledSkillDir`. The install script
+# copies the skills to <dshHome>/skills instead, which is simpler and works
+# without a plugin install.
+#
+# To use the bundled route instead, install the package and point
+# bundledSkillDir at the package's skills/ directory.
+
+- insert:
+    - id: founder-skills
+      name: '@deepseek-ai/dsh-skill-filesystem'
+      config:
+        includeDefaultRoots: true

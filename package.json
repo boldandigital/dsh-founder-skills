@@ -1,0 +1,36 @@
+{
+  "name": "@lars/founder-dsh",
+  "version": "1.0.0",
+  "description": "The Founder pack for DeepSeek Harness: eleven specialist skills plus one chained entry point that runs a complete business-idea assessment, in Quick (20 simulated buyers) or Full (100).",
+  "license": "MIT",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "skill",
+    "bundle",
+    "business",
+    "validation",
+    "pricing",
+    "unit-economics"
+  ],
+  "files": [
+    "skills",
+    "README.md",
+    "LICENSE",
+    "cordis.patch.yml"
+  ],
+  "engines": {
+    "dsh": ">=0.2.0"
+  },
+  "cordis": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.1.0"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "~4.1.0"
+  }
+}
