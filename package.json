@@ -1,25 +1,42 @@
 {
-  "name": "@lars/founder-dsh",
+  "name": "dsh-founder-skills",
   "version": "1.0.0",
-  "description": "The Founder pack for DeepSeek Harness: eleven specialist skills plus one chained entry point that runs a complete business-idea assessment, in Quick (20 simulated buyers) or Full (100).",
+  "description": "The Founder pack for DeepSeek Harness: eleven specialist business skills plus one chained entry point that runs a complete business-idea assessment, in Quick (20 simulated buyers) or Full (100).",
   "license": "MIT",
   "keywords": [
     "dsh",
     "deepseek-harness",
+    "dsh-skill",
     "skill",
     "bundle",
     "business",
+    "business-idea",
     "validation",
     "pricing",
-    "unit-economics"
+    "unit-economics",
+    "market-research"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boldandigital/dsh-founder-skills.git"
+  },
+  "homepage": "https://github.com/boldandigital/dsh-founder-skills#readme",
+  "bugs": {
+    "url": "https://github.com/boldandigital/dsh-founder-skills/issues"
+  },
+  "author": "Lars von Hierblau <lars.z@icloud.com>",
   "files": [
     "skills",
+    "install.sh",
     "README.md",
     "LICENSE",
     "cordis.patch.yml"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
+    "node": ">=18",
     "dsh": ">=0.2.0"
   },
   "cordis": {

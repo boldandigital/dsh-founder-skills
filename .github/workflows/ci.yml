@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Every skill has a valid SKILL.md
+        run: |
+          python3 - <<'PY'
+          import pathlib, re, sys
+          root = pathlib.Path('skills')
+          skills = sorted(p for p in root.iterdir() if p.is_dir())
+          assert skills, 'no skills found'
+          for s in skills:
+              md = s / 'SKILL.md'
+              assert md.is_file(), f'{s}: no SKILL.md'
+              text = md.read_text(encoding='utf-8')
+              assert text.startswith('---'), f'{s}: no frontmatter'
+              fm = text.split('---')[1]
+              assert re.search(r'^name:', fm, re.M), f'{s}: no name'
+              assert re.search(r'^description:', fm, re.M), f'{s}: no description'
+              # Every relative and $SKILLDIR reference must resolve.
+              for m in re.finditer(r'\$SKILLDIR/([^\s`"\',)]+)', text):
+                  assert (s / m.group(1)).exists(), f'{s}: $SKILLDIR/{m.group(1)} missing'
+              for m in re.finditer(r'`(\.\./[^`]+)`', text):
+                  assert (s / m.group(1)).resolve().exists(), f'{s}: {m.group(1)} missing'
+          print(f'{len(skills)} skills OK')
+          PY
+
+      - name: No Claude Code residue
+        run: |
+          ! grep -rn 'CLAUDE_SKILL_DIR\|\$ARGUMENTS\|argument-hint\|subagent_type' skills/
+
+      - name: Python compiles
+        run: python3 -m compileall -q skills
+
+      - name: Unit tests
+        # The upstream test suite, vendored in tests/. It loads ../skills, so it
+        # exercises this port, not the upstream tree.
+        run: |
+          cd tests
+          python3 -m unittest test_compile test_panel test_pricing test_unit_economics -v
+
+      - name: Package contents
+        run: |
+          npm pack --dry-run
