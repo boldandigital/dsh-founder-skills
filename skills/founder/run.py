@@ -104,6 +104,36 @@ def cmd_path(args):
     print(os.path.join(os.path.abspath(args.dir), "founder"))
 
 
+def cmd_check_customer(args):
+    """Validate a customer profile against panel.py's rules, before init."""
+    panel = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "founder-consumer", "panel.py")
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("founder_panel", panel)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    path = os.path.abspath(args.customer)
+    try:
+        with open(path, encoding="utf-8") as fh:
+            customer = json.load(fh)
+    except FileNotFoundError:
+        raise SystemExit("no such file: %s" % path)
+    except ValueError as exc:
+        raise SystemExit("%s is not valid JSON: %s" % (path, exc))
+    try:
+        mod.validate_customer(customer)
+    except mod.PanelError as exc:
+        print("customer profile is not usable: %s" % exc, file=sys.stderr)
+        print("See %s for the shape panel.py expects." % os.path.join(os.path.dirname(panel), "customer.example.json"),
+              file=sys.stderr)
+        return 1
+    n = len(customer.get("segments", []))
+    print("customer profile OK: %s" % customer.get("business", "(unnamed)"))
+    print("  %d segment(s), %d behaviour(s), %d objection(s)"
+          % (n, len(customer.get("behaviours", [])), len(customer.get("objections", []))))
+    print("  currency: %s" % (customer.get("currency") or "$ (default)"))
+    return 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--dir", help="run directory (used by status and path)")
@@ -116,12 +146,16 @@ def main(argv=None):
     p_new.add_argument("--currency", default="$")
     p_status = sub.add_parser("status", help="which stages are done")
     p_status.add_argument("--dir", required=True)
+    p_check = sub.add_parser("check-customer", help="validate a customer profile before init")
+    p_check.add_argument("--customer", required=True)
     sub.add_parser("path", help="print the founder/ directory").add_argument("--dir", required=True)
     args = ap.parse_args(argv)
     if args.cmd == "new":
         cmd_new(args)
     elif args.cmd == "status":
         return cmd_status(args)
+    elif args.cmd == "check-customer":
+        return cmd_check_customer(args)
     elif args.cmd == "path":
         cmd_path(args)
     else:

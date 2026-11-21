@@ -39,6 +39,18 @@ run directory, drives each stage in order, and finishes with the compiled plan.
 panel size changes. A Quick run is a real business plan with less statistical
 power, not a stripped-down one. Both write the same files.
 
+The practical difference is time. The harness allows eight active child agents
+at once, so the panel runs in waves of six to eight:
+
+| | buyers | waves | wall time |
+| --- | --- | --- | --- |
+| Quick | 20 | 2–3 | an hour or two |
+| Full | 100 | 10–13 | several hours |
+
+Expect a few relaunches in Full. A child that reports success without writing
+its answer file has not answered — `panel.py check` names every buyer still
+missing, which is what the loop runs on.
+
 ## What comes out
 
 One directory per idea, so two ideas never share state:
@@ -142,7 +154,16 @@ The upstream pack is written for Claude Code. The port changed:
   entry point drives the chain itself and never stops at a stage's printed
   "Next:" pointer.
 - **New: `run.py`.** Creates and inspects isolated run directories, so two
-  ideas never share `founder/`, and a resumed run knows what is left.
+  ideas never share `founder/`, and a resumed run knows what is left. It also
+  validates a customer profile before the panel is set up, so a schema mistake
+  surfaces immediately instead of halfway through a run:
+
+  ```bash
+  python3 run.py new --name my-idea --root runs --mode quick --currency '€'
+  python3 run.py check-customer --customer founder/customer.json
+  python3 run.py status --dir runs/my-idea
+  ```
+
 - **New: currency support** in the four scripts that print money.
 
 ## Not legal, financial or tax advice

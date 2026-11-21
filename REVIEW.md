@@ -109,14 +109,19 @@ finding — no conclusion about that idea should be drawn from it.
 
 1. **Sub-agent fan-out is unreliable in this environment.** Launching 7
    children at once, most failed without writing a file. The panel survived it
-   because `check` names every missing answer and the agent relaunches. The
-   workflow documents waves of ten, `check` between waves, and verifying the
-   file rather than the completion message.
+   because `check` names every missing answer and the agent relaunches.
+   *Addressed in the docs:* `workflow.md` now states the harness's eight-child
+   cap explicitly, specifies batches of six to eight, and documents the exact
+   check → launch → wait → check loop plus the two failure modes (a child that
+   reports success without writing, and a child that omits the price fields).
+   The `founder` skill repeats the eight-child cap in its own instructions.
 2. **The panel needs a real `customer.json`.** The schema wants segments with
    income bands, behaviours with shares and objections. A malformed file fails
-   with `every segment needs a name and an income [low, high]` — correct, but
-   the error arrives after `run.py new`, so the entry point should validate the
-   customer file before calling `init`.
+   with `every segment needs a name and an income [low, high]`. *Addressed:*
+   `run.py check-customer --customer <path>` validates a profile against
+   `panel.py`'s own rules and exits non-zero with a pointer to
+   `customer.example.json`, so the mistake surfaces before the panel is set up
+   rather than half-way through a run.
 3. **`compile.py` still prints slash-command pointers** (issue 7).
 4. **The pack assumes web research works.** `founder-competitors` and
    `founder-ops` need public sources. In an environment without working search,

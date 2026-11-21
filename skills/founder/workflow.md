@@ -140,6 +140,39 @@ expensive, too expensive) as numbers. `check` passes an answer that is missing
 one, and `founder-pricing` then silently drops that buyer. Ask for every field
 the brief's JSON block lists, and read the files back.
 
+### Running the waves
+
+The harness allows **eight active child agents at once**. A wave of ten will
+fail with `subagent limit reached (active child limit: 8)`. Launch **six to
+eight per wave**, and treat the wave list from `prompts` as the schedule
+rather than a strict size.
+
+The loop that works:
+
+1. `panel.py --dir founder/panel check` — it names every buyer still missing.
+2. Launch up to eight sub-agents, one per missing buyer, each pointed at its
+   brief and its answer path.
+3. `wait_agent` for the children to report.
+4. `check` again. Re-launch any buyer whose answer file is absent — a child
+   that reported success without writing a file has not answered.
+5. Repeat until `check` says **all answers present and valid**.
+
+Two failure modes to expect:
+
+- **A child reports success but writes nothing.** Relaunch it, and say
+  explicitly: "write the absolute path … do not skip the file".
+- **A child returns `None` for the four price fields.** Relaunch it saying:
+  "with EVERY field the brief's JSON block lists, including
+  price_too_cheap, price_cheap, price_expensive, price_too_expensive, as
+  numbers".
+
+Do not poll a running child. End the turn when only waiting remains and let
+the completion notice arrive.
+
+**Quick (20 buyers)** is two waves and usually clean. **Full (100 buyers)** is
+ten waves and will take a while; expect a few relaunches. That is normal, and
+it is why Quick is the default.
+
 ## Where the numbers come from
 
 `numbers.json` is the single source of truth. `founder-cfo` writes it,
