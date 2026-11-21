@@ -6,17 +6,23 @@ broken, what was fixed, what was added, and what is still not right.
 
 ## Published
 
-Released 2026-11-21 as `dsh-founder-skills@1.0.0`.
+Released 2026-11-21 as `dsh-founder-skills@1.0.1`.
 
 | channel | address |
 | --- | --- |
-| npm | https://www.npmjs.com/package/dsh-founder-skills (tagged `latest`, 27 files, 42.6 kB) |
+| npm | https://www.npmjs.com/package/dsh-founder-skills (tagged `latest`, 28 files, 45.1 kB) |
 | GitHub | https://github.com/boldandigital/dsh-founder-skills (public, `main`) |
+| releases | v1.0.0 and v1.0.1, each with the npm tarball attached |
 
 Both verified by downloading the published tarball and installing it into a
 clean DSH home: 12 skills installed, `run.py new` worked in both Quick and
 Full mode, and the panel dealt 100 buyers in Full. GitHub CI is green on the
 published commit.
+
+`1.0.1` hardened the panel's operational mechanics after running both modes
+for real — the eight-child batch cap, the check → launch → wait → check loop,
+and `run.py check-customer`. It also fixed the published tarball, which was
+including bytecode from nested `__pycache__` directories.
 
 Install with `npm install -g dsh-founder-skills` and then `./install.sh` from
 the installed directory, or clone the repo and run `./install.sh` directly.
